@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Multiplayer Test</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2>Basic Multiplayer Test</h2>
+  <input type="text" id="nameInput" placeholder="Enter your name" />
+  <button onclick="joinGame()">Join Game</button>
+
+  <h3>Players:</h3>
+  <ul id="playersList"></ul>
+
+  <script>
+    const socket = io();
+
+    function joinGame() {
+      const name = document.getElementById('nameInput').value;
+      socket.emit("joinGame", name);
+    }
+
+    socket.on("updatePlayers", (players) => {
+      const list = document.getElementById("playersList");
+      list.innerHTML = "";
+      for (const id in players) {
+        const li = document.createElement("li");
+        li.textContent = players[id].name + " — Coins: " + players[id].coins;
+        list.appendChild(li);
+      }
+    });
+  </script>
+</body>
+</html>
